@@ -4,14 +4,16 @@
       商品查询
     </div>
     <div class="section-box">
-      <v-search />
-      <v-result />
+      <!--<v-search />-->
+      <Search />
+      <v-result v-on:clickBBBB="BBBB"></v-result>
     </div>
   </div>
 </template>
 <script>
   import pageMix from '@/components/Mixin/searchPage'
   import vResult from '@/views/product/components/result'
+  import {Search} from 'vue-bg-search'
   export default{
     mixins:[pageMix],
     created(){
@@ -145,15 +147,25 @@
           }
         ],
       },
+
     }),
     methods:{
       initView(){
         this.paramsInit()
       },
+      AAAA(rs){
+        console.log('AA')
+        console.log(rs)
+      },
+      BBBB(rs){
+        console.log('BB')
+        console.log(rs)
+      },
 
     },
     components:{
-      vResult
+      vResult,
+      Search
     },
   }
 </script>

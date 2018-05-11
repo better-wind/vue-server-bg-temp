@@ -35,4 +35,7 @@ export default {
   [types.SET_VIEW_IMAGE]:(state,rs) => {
     state.viewImageConfig = rs
   },
+  SET_DEMO_CONFIG_GLOBAL:(state,rs) => {
+    state.demoConfigGlobal = rs
+  }
 }

@@ -17,4 +17,5 @@ export default {
     isShow:false,
     url:''
   },
+  demoConfigGlobal:{},
 }

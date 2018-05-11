@@ -34,30 +34,63 @@
     mixins:[pageMix],
     created(){
       this.initView()
+      // this.$parent.AAAA('parent')
+      // this.$emit('clickBBBB','emit')
     },
     data:()=>({
 
     }),
     methods:{
-      ...mapActions(['getProductList']),
+      // ...mapActions('product',['getProductList']),
+      ...mapActions({
+        getProductList: 'product/getProductList'
+      }),
 //      initView(){
 //        const query = UtilTool.parseQuery(this.$route.query)
 //        const params = UtilTool.paramsAssign(query,this.searchParams)
 //        this.setSearchParams(params)
 //        this.searchList(params)
 //      },
-      searchList(params){
+//       searchList(params){
+//         this.loading = true
+//         this.getProductList(params)
+//           .then((rs)=>{
+//               this.searchResult = rs
+//               this.setPage()
+//               this.loading = false
+//               this.demoAsync(params)
+//           },()=>{
+//              this.loading = false
+//           })
+//
+//
+//     },
+      async searchList(params){
         this.loading = true
-        this.getProductList(params)
-          .then((rs)=>{
-            if(rs){
-              this.searchResult = rs
-              this.setPage()
-            }
-            this.loading = false
-          })
-
-    },
+        try {
+          const rs = await this.getProductList(params)
+          this.searchResult = rs
+          this.setPage()
+          this.loading = false
+        } catch(err){
+          this.loading = false
+        }
+        // this.demoAsync(params)
+      },
+      demoAsync(params){
+        this.demo(params).then((rs)=>{
+          console.log(rs)
+        },()=>{
+          console.log('=====')
+        })
+      },
+      async demo(params){
+        var a = ()=> new Promise((resolve => {
+          resolve([12,34])
+        }))
+        const rs = await a()
+        return rs
+      },
     }
   }
 </script>

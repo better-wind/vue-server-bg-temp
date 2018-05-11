@@ -61,6 +61,54 @@ const UtilTool = {
       _params = Object.assign({},_params,defParams)
     }
     return _params
+  },
+  getFileImage:(src)=>{
+    return new Promise((resolve,reject) => {
+      var image = new Image();
+      image.onload = function(){
+        const width = image.width
+        const height = image.height
+        resolve({width,height})
+      }
+      image.onerror = function(err){
+        reject(err)
+      }
+      image.src = src;
+    })
+  },
+  getFileReaderImage:(file)=>{
+    return new Promise((resolve,reject)=> {
+      var fr = new FileReader();
+      fr.onload = async function(_file) {
+        try{
+          const imageWh =  await UtilTool.getFileImage(_file.target.result)
+          const size = file.size
+          const type = file.type
+          resolve({...imageWh,size,type})
+        } catch (err) {
+          reject(err)
+        }
+
+
+        // var image = new Image();
+        // image.onload = function(){
+        //   const width = image.width
+        //   const height = image.height
+        //   const size = file.size
+        //   const type = file.type
+        //   resolve({width,height,size,type})
+        // }
+        // image.onerror = function(err){
+        //   reject(err)
+        // }
+        // image.src = _file.target.result;
+
+      }
+      fr.onerror = function(err){
+        reject(err)
+      }
+      fr.readAsDataURL(file);
+    })
   }
 
 }

@@ -17,4 +17,9 @@ export default {
   setViewImage ({commit},data) {
     commit('SET_VIEW_IMAGE',data)
   },
+  setDemoConfigGlobal ({commit},rs){
+    // commit('SET_DEMO_CONFIG',rs)
+    commit('product/SET_DEMO_CONFIG',rs)
+    commit('SET_DEMO_CONFIG_GLOBAL',rs)
+  }
 }
