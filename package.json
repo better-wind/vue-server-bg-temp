@@ -57,7 +57,7 @@
     "shelljs": "^0.7.6",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
-    "vue-bg-search": "^1.0.3",
+    "vue-bg-search": "^1.0.4",
     "vue-loader": "^13.3.0",
     "vue-quill-editor": "^3.0.6",
     "vue-style-loader": "^3.0.1",

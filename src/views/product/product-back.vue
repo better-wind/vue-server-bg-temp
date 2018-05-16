@@ -4,24 +4,23 @@
       商品查询
     </div>
     <div class="section-box">
-      <v-search />
-      <v-result :getSearchList="getProductList">
-        <template slot="slot-detail" slot-scope="scope" >
-          <p>slot数据传回：{{scope.rs.brand}}</p>
-          <p>接口方法参数传递：{{scope.rs.price}}</p>
+      <!--<v-search />-->
+      <Search />
+      <v-result v-on:clickBBBB="BBBB" :getSearchList="getProductList">
+        <template slot="detail-msg" slot-scope="scope" >
+          <p>品牌名称：{{scope.rs.brand}}</p>
+          <p>价格：{{scope.rs.price}}</p>
         </template>
-        <template slot="slot-operate" slot-scope="scope" >
-          <el-button size="small" type="primary" @click="editDetail(scope.rs)">编辑</el-button>
-        </template>
-
       </v-result>
     </div>
   </div>
 </template>
 <script>
-  import {mapActions} from 'vuex'
+  import {mapActions,mapState} from 'vuex'
   import pageMix from '@/components/Mixin/searchPage'
-  import {Search,Result} from 'vue-bg-search'
+  // import vResult from '@/views/product/components/result'
+  import vResult from '@/components/search/result'
+  import {Search} from 'vue-bg-search'
   export default{
     mixins:[pageMix],
     created(){
@@ -134,7 +133,7 @@
             label:'详情',
             type:'slot',
             width:'580',
-            slotName:'slot-detail',
+            slotName:'detail-msg',
             key:'detail',
             align:'center'
           },
@@ -142,8 +141,7 @@
             label:'操作',
             key:'operate',
             width:'160',
-            type:'slot-operate',
-            slotName:'slot-operate',
+            type:'operate',
             align:'center',
             items:[
               {
@@ -166,14 +164,19 @@
       initView(){
         this.paramsInit()
       },
-      editDetail(rs){
+      AAAA(rs){
+        console.log('AA')
+        console.log(rs)
+      },
+      BBBB(rs){
+        console.log('BB')
         console.log(rs)
       },
 
     },
     components:{
-      vResult:Result,
-      vSearch:Search
+      vResult,
+      Search
     },
   }
 </script>

@@ -11,6 +11,14 @@
                 </div>
               </template>
             </el-table-column>
+            <el-table-column v-else-if="item.type=='slot'" :label="item.label" :width="item.width" :align="item.align">
+              <template slot-scope="scope">
+                <slot :name="item.slotName" :rs="scope.row[item.key]"></slot>
+                <!--<div class="table-detail">-->
+                  <!--{{scope.row[item.key].brand}}-->
+                <!--</div>-->
+              </template>
+            </el-table-column>
             <el-table-column v-else-if="item.type=='operate'" :label="item.label" :width="item.width" :align="item.align">
               <template slot-scope="scope">
                 <template v-for="operate in item.items">

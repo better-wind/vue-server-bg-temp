@@ -5,27 +5,20 @@
         <el-table v-loading="loading" element-loading-text="拼命加载中" :data="searchResult.rows" style="width: 100%;" >
           <template v-for="(item,index) in searchConfig.searchResult">
             <el-table-column v-if="item.type=='image'" :label="item.label" :width="item.width" :align="item.align">
-              <template scope="scope">
+              <template slot-scope="scope">
                 <div class="table-image">
                   <img :src="scope.row[item.key]" style="width: 80px;height: 80px" alt="">
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-else-if="item.type=='detail'" :label="item.label" :width="item.width" :align="item.align">
-              <template scope="scope">
-                <div class="table-detail">
-                  <p v-for="detail in item.items">
-                    <span class="name">{{detail.label}}</span>
-                    <span>{{scope.row[item.key][detail.key]}}</span>
-                  </p>
-                </div>
+            <el-table-column v-else-if="item.type=='slot'" :label="item.label" :width="item.width" :align="item.align">
+              <template slot-scope="scope">
+                <slot :name="item.slotName" :rs="scope.row[item.key]"></slot>
               </template>
             </el-table-column>
-            <el-table-column v-else-if="item.type=='operate'" :label="item.label" :width="item.width" :align="item.align">
-              <template scope="scope">
-                <template v-for="operate in item.items">
-                  <el-button size="small" :type="operate.type" @click="setPageEvent(operate.eventName,scope.row)">{{operate.label}}</el-button>
-                </template>
+            <el-table-column v-else-if="item.type=='slot-operate'" :label="item.label" :width="item.width" :align="item.align">
+              <template slot-scope="scope">
+                <slot :name="item.slotName" :rs="scope.row"></slot>
               </template>
             </el-table-column>
             <el-table-column v-else :prop="item.key" :label="item.label" :width="item.width" :align="item.align"></el-table-column>
@@ -37,86 +30,28 @@
   </div>
 </template>
 <script>
-  import vPagination from '@/components/tools/Pagination'
-  import fetchUrl from '@/assets/js/common/fetch-url'
-  import {mapActions,mapState} from 'vuex'
+  import pageMix from '@/components/Mixin/resultPage'
+
   export default{
-    computed:{
-      ...mapState(['searchConfig','searchParams','handleEvent'])
-    },
-    props:['API'],
+    mixins:[pageMix],
     created(){
       this.initView()
     },
-    data:()=>({
-      loading:false,
-      paging:{
-        currentPage:1,
-        pageSizes:[20,30,50,100],
-        pageSize:0,
-        total:0
-      },
-      pagingShow:false,
-      searchResult:{}
-    }),
+    props:['getSearchList'],
     methods:{
-      ...mapActions(['setSearchParams','pageList','setStartToast','setHandleEvent']),
-      initView(){
-        const query = UtilTool.parseQuery(this.$route.query)
-        const params = UtilTool.paramsAssign(query,this.searchParams)
-        const _API = fetchUrl[this.API]
-        this.setSearchParams(params)
-        this.searchList(params,_API)
-      },
-      searchList(params,API){
+      async searchList(params){
         this.loading = true
-        this.pageList({params,API})
-          .then((item)=>{
-            this.searchResult = item
-            this.setPage()
-          })
-      },
-      setPage(){
-        this.paging.pageSize = Number(this.searchParams.rows)
-        this.paging.currentPage = Number(this.searchParams.page)
-        this.paging.total = this.searchResult.total
-        this.pagingShow = true
-        this.loading = false
-      },
-      setPageEvent(name,rs){
-        const _opt = {
-          currentEvent:name,
-          eventRs:rs,
-          time:new Date().getTime(),
-        }
-        let _params = Object.assign({},this.handleEvent,_opt)
-        this.setHandleEvent(_params)
-      },
-      getToast(msg){
-        this.setStartToast({
-          isShow:true,
-          msg:msg,
-          type:'warning'
-        })
-      },
-    },
-    watch: {
-      '$route' (to, from) {
-        if (to.fullPath !== from.fullPath) {
-          this.initView();
+        try {
+          const rs = await this.getSearchList(params)
+          this.searchResult = rs
+          this.setPage()
+          this.loading = false
+        } catch(err){
+          this.loading = false
         }
       },
-      'handleEvent.refreshTime' () {
-          if(this.handleEvent.currentEvent){
-            this.initView()
-          }
-
-      }
-    },
-    components: {
-      vPagination,
-    },
-
+    }
   }
 </script>
+
 
